@@ -23,23 +23,14 @@ modules:
         url: https://files.pythonhosted.org/packages/51/60/3f0fe5b7675a461d96b9d6729beecd3532565743278a9c3fe6dd09697fa7/numpy-1.19.5.zip
         sha256: a76f502430dd98d7546e1ea2250a7360c065a5fdea52b2dffe8ae7180909b6f4  
 
-  #- name: tomviz
-    #buildsystem: cmake
-    #builddir: true
-    #config-opts: 
-         #- -DTomvizSuper_INSTALL_PREFIX=/app
-    #sources:
-      #- type: git
-        #url: https://github.com/OpenChemistry/tomvizsuper
-        #commit: 51f93b92edf9a65f858896a72a97aff184409b80
-
   - name: tomviz
     buildsystem: cmake
     no-make-install: true
     builddir: true
     config-opts:
-      - -DTomvizSuper_INSTALL_PREFIX=/app/bin
+      #- -DTomvizSuper_INSTALL_PREFIX=/app/bin
       - -DCMAKE_BUILD_TYPE:STRING=Release
+      - -DCMAKE_INSTALL_BINDIR=/app/bin
     sources:
       - type: git
         url: https://github.com/OpenChemistry/tomvizsuper
