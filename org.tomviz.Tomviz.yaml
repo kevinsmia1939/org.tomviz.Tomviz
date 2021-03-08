@@ -1,7 +1,10 @@
 app-id: org.tomviz.Tomviz
 runtime: org.freedesktop.Platform
 sdk: org.freedesktop.Sdk
-runtime-version: 20.08
+runtime-version: '20.08'
+runtime: org.kde.Platform
+sdk: org.kde.Sdk
+runtime-version: '5.15'
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm11
 command: tomviz
@@ -96,12 +99,12 @@ modules:
 
   - name: castxml
     buildsystem: cmake
-    config-opts:
-      - -DCLANG_LINK_CLANG_DYLIB:BOOL=ON
     build-options:
       env:
+        AR: llvm-ar
         CC: clang
         CXX: clang++
+        NM: llvm-nm
     sources:
       - type: archive
         url: https://github.com/CastXML/CastXML/archive/v0.4.3.tar.gz
