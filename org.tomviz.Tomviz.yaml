@@ -99,20 +99,30 @@ modules:
 
   - name: castxml
     buildsystem: cmake
+    config-opts:
+      - -DCLANG_LINK_CLANG_DYLIB:BOOL=ON
+      - -DLLVM_DIR=/usr/lib/sdk/llvm11/lib/cmake/llvm
     build-options:
       env:
-        AR: llvm-ar
         CC: clang
         CXX: clang++
-        NM: llvm-nm
+        prepend-path: /usr/lib/sdk/llvm11/bin
+        prepend-ld-library-path: /usr/lib/sdk/llvm11/lib
     sources:
       - type: archive
         url: https://github.com/CastXML/CastXML/archive/v0.4.3.tar.gz
-        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65
-    config-opts: 
-    #cleanup: 
-      #- /bin       
-        
+        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65 
+
+  - name: eigen3
+    buildsystem: cmake-ninja
+    builddir: true
+    cleanup: 
+      - "*"
+    sources:
+      - type: archive
+        url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
+        sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677        
+
   - name: ITK
     buildsystem: cmake
     no-make-install: true
@@ -141,7 +151,6 @@ modules:
       - -DITK_USE_SYSTEM_SWIG:BOOL=ON
       - -DITK_USE_SYSTEM_VXL:BOOL=OFF
       - -DITK_FORBID_DOWNLOADS=ON
-      
     sources:
       - type: archive
         url: https://github.com/InsightSoftwareConsortium/ITK/releases/download/v5.1.2/InsightToolkit-5.1.2.tar.gz
@@ -153,10 +162,8 @@ modules:
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
-      - -DParaView_DIR:PATH=app/paraview-build
-      - -DITK_DIR:PATH=app/itk-build
-    post-install:
-      - cp
+      #- -DParaView_DIR:PATH=app/paraview
+      #- -DITK_DIR:PATH=app/itk-build
     sources:
       - type: archive
         url: https://github.com/OpenChemistry/tomviz/archive/1.9.0.tar.gz
