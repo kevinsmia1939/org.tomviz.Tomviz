@@ -38,28 +38,6 @@ modules:
       - type: patch
         path: tbb_cmake.patch
 
-  - name: openchemistry-paraview
-    buildsystem: cmake
-    no-make-install: true
-    builddir: true
-    config-opts:
-      - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
-      - -DBUILD_TESTING:BOOL=OFF
-      - -DPARAVIEW_USE_PYTHON:BOOL=ON
-      - -DPARAVIEW_ENABLE_WEB:BOOL=OFF
-      - -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
-      - -DPARAVIEW_USE_QTHELP:BOOL=OFF
-      - -DPARAVIEW_PLUGINS_DEFAULT:BOOL=OFF
-      - -DVTK_SMP_IMPLEMENTATION_TYPE:STRING=TBB
-      - -DVTK_PYTHON_VERSION:STRING=3
-      - -DVTK_PYTHON_FULL_THREADSAFE:BOOL=ON
-      - -DVTK_NO_PYTHON_THREADS:BOOL=OFF
-    sources:
-      - type: git
-        url: git://github.com/OpenChemistry/ParaView.git
-        tag: v5.9.0
-        commit: 0aaf903ba3e8d012a608a466f798a041b4aebe17
-
   - name: swig
     config-opts:
       - --without-pcre
@@ -122,6 +100,29 @@ modules:
       - type: archive
         url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
         sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677        
+
+    # Paraview need 32GB of memory to build
+  - name: openchemistry-paraview
+    buildsystem: cmake
+    no-make-install: true
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
+      - -DBUILD_TESTING:BOOL=OFF
+      - -DPARAVIEW_USE_PYTHON:BOOL=ON
+      - -DPARAVIEW_ENABLE_WEB:BOOL=OFF
+      - -DPARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION:BOOL=OFF
+      - -DPARAVIEW_USE_QTHELP:BOOL=OFF
+      - -DPARAVIEW_PLUGINS_DEFAULT:BOOL=OFF
+      - -DVTK_SMP_IMPLEMENTATION_TYPE:STRING=TBB
+      - -DVTK_PYTHON_VERSION:STRING=3
+      - -DVTK_PYTHON_FULL_THREADSAFE:BOOL=ON
+      - -DVTK_NO_PYTHON_THREADS:BOOL=OFF
+    sources:
+      - type: git
+        url: git://github.com/OpenChemistry/ParaView.git
+        tag: v5.9.0
+        commit: 0aaf903ba3e8d012a608a466f798a041b4aebe17
 
   - name: ITK
     buildsystem: cmake
