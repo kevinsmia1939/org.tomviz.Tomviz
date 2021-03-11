@@ -1,22 +1,37 @@
 app-id: org.tomviz.Tomviz
-runtime: org.freedesktop.Platform
-sdk: org.freedesktop.Sdk
-runtime-version: '20.08'
 runtime: org.kde.Platform
 sdk: org.kde.Sdk
 runtime-version: '5.15'
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.llvm11
 command: tomviz
 finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
-  #- --filesystem=home
+  - --filesystem=home
 
 modules:
   - shared-modules/glew/glew.json
+  
+  - name: CastXML
+    buildsystem: cmake
+    config-opts:
+      - -DCLANG_LINK_CLANG_DYLIB:BOOL=ON
+      - -DLLVM_DIR=/usr/lib/sdk/llvm11/lib/cmake/llvm
+    sources:
+      - type: archive
+        url: https://github.com/CastXML/CastXML/archive/v0.4.3.tar.gz
+        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65 
+
+  - name: Eigen3
+    buildsystem: cmake-ninja
+    builddir: true
+    cleanup: 
+      - "*"
+    sources:
+      - type: archive
+        url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
+        sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677     
   
   - name: python3-numpy
     buildsystem: simple
@@ -73,38 +88,11 @@ modules:
       - -DGDCM_USE_VTK=OFF
       - -DGDCM_BUILD_DOCBOOK_MANPAGES:BOOL=OFF
     #cleanup: 
-      #- /bin
-
-  - name: castxml
-    buildsystem: cmake
-    config-opts:
-      - -DCLANG_LINK_CLANG_DYLIB:BOOL=ON
-      - -DLLVM_DIR=/usr/lib/sdk/llvm11/lib/cmake/llvm
-    build-options:
-      env:
-        CC: clang
-        CXX: clang++
-        prepend-path: /usr/lib/sdk/llvm11/bin
-        prepend-ld-library-path: /usr/lib/sdk/llvm11/lib
-    sources:
-      - type: archive
-        url: https://github.com/CastXML/CastXML/archive/v0.4.3.tar.gz
-        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65 
-
-  - name: eigen3
-    buildsystem: cmake-ninja
-    builddir: true
-    cleanup: 
-      - "*"
-    sources:
-      - type: archive
-        url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
-        sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677        
+      #- /bin   
 
     # Paraview need 32GB of memory to build
   - name: openchemistry-paraview
     buildsystem: cmake
-    no-make-install: true
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
@@ -121,12 +109,13 @@ modules:
     sources:
       - type: git
         url: git://github.com/OpenChemistry/ParaView.git
-        tag: v5.9.0
         commit: 0aaf903ba3e8d012a608a466f798a041b4aebe17
-
+        #0aaf903ba3e8d012a608a466f798a041b4aebe17 5.9.0
+        #74338e7d6058d0d1cf89405b3c8e932f9d4ea921  git
+        #10938cd09bfd2fae80955c4886a4e1cdac782b50 dev recc
+        
   - name: ITK
     buildsystem: cmake
-    no-make-install: true
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
@@ -159,13 +148,13 @@ modules:
         
   - name: tomviz
     buildsystem: cmake
-    no-make-install: true
+    no-make-install: false
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE:STRING=RelWithDebInfo
-      #- -DParaView_DIR:PATH=app/paraview
-      #- -DITK_DIR:PATH=app/itk-build
     sources:
-      - type: archive
-        url: https://github.com/OpenChemistry/tomviz/archive/1.9.0.tar.gz
-        sha256: b006c144a5ab3c0f105c9a2a6fe73e1c66d1e59880d7a33a25fb6a864dcaa695
+      - type: git
+        url: https://github.com/OpenChemistry/tomviz/
+        tags: 1.9.0
+        commit: 1e6b9d967da32d1e824a13b21721c90284a46a72
+        #1e6b9d967da32d1e824a13b21721c90284a46a72 master
