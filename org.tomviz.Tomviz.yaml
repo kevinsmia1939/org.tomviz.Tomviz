@@ -21,7 +21,9 @@ modules:
     sources:
       - type: archive
         url: https://github.com/CastXML/CastXML/archive/v0.4.3.tar.gz
-        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65 
+        sha256: 3dd94096e07ffe103b2a951e4ff0f9486cc615b3ef08e95e5778eaaec667fb65
+    cleanup:
+      - /lib/cmake     
 
   - name: Eigen3
     buildsystem: cmake-ninja
@@ -31,7 +33,35 @@ modules:
     sources:
       - type: archive
         url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
-        sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677     
+        sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677
+    
+  - name: lapack
+    buildsystem: cmake
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_TESTING=OFF
+      - -DLAPACKE=ON
+      - -DCBLAS=ON
+    sources:
+      - type: archive
+        url: https://github.com/Reference-LAPACK/lapack/archive/v3.9.0.tar.gz
+        sha256: 106087f1bb5f46afdfba7f569d0cbe23dacb9a07cd24733765a0e89dbe1ad573
+    cleanup:
+      - /lib/cmake
+      
+  - name: pybind11    
+    buildsystem: simple
+    build-commands:
+      - python3.8 setup.py build
+      - cmake -DPYBIND11_INSTALL=ON -DPYBIND11_TEST=OFF .
+      - cmake --build .
+      - python3.8 setup.py install --skip-build --force --prefix=/app
+    sources:
+      - type: archive
+        url: https://github.com/pybind/pybind11/archive/v2.6.2.tar.gz
+        sha256: 8ff2fff22df038f5cd02cea8af56622bc67f5b64534f1b83b9f133b8366acff2
   
   - name: python3-numpy
     buildsystem: simple
@@ -43,6 +73,22 @@ modules:
         url: https://files.pythonhosted.org/packages/51/60/3f0fe5b7675a461d96b9d6729beecd3532565743278a9c3fe6dd09697fa7/numpy-1.19.5.zip
         sha256: a76f502430dd98d7546e1ea2250a7360c065a5fdea52b2dffe8ae7180909b6f4  
 
+  - name: python3-scipy
+    buildsystem: simple
+    build-commands:
+      - python3 setup.py build -j 0
+      - python3 setup.py install --prefix=/app --root=/ --optimize=1
+    build-options:
+      env:
+        ATLAS: None
+        BLAS: "/app/lib"
+        LAPACK: "/app/lib"
+        LDFLAGS: "-shared"
+    sources:
+      - type: archive
+        url: https://github.com/scipy/scipy/releases/download/v1.6.1/scipy-1.6.1.tar.gz
+        sha256: c4fceb864890b6168e79b0e714c585dbe2fd4222768ee90bc1aa0f8218691b11      
+        
   - name: TBB
     buildsystem: cmake
     builddir: true
