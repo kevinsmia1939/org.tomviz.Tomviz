@@ -155,10 +155,8 @@ modules:
     sources:
       - type: git
         url: git://github.com/OpenChemistry/ParaView.git
+        tag: v5.9.0
         commit: 0aaf903ba3e8d012a608a466f798a041b4aebe17
-        #0aaf903ba3e8d012a608a466f798a041b4aebe17 5.9.0
-        #74338e7d6058d0d1cf89405b3c8e932f9d4ea921  git
-        #10938cd09bfd2fae80955c4886a4e1cdac782b50 dev recc
         
   - name: ITK
     buildsystem: cmake
