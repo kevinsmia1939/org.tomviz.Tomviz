@@ -9,6 +9,15 @@ finish-args:
   - --socket=fallback-x11
   - --device=dri
   - --filesystem=home
+cleanup:
+  - /bin/papraview
+  - /include
+  - /lib/cmake
+  - /share/doc
+  - /share/applications
+  - /share/castxml
+  - *.la
+  - *.a
 
 modules:
   - shared-modules/glew/glew.json
@@ -28,12 +37,12 @@ modules:
   - name: Eigen3
     buildsystem: cmake-ninja
     builddir: true
-    cleanup: 
-      - "*"
     sources:
       - type: archive
         url: https://gitlab.com/libeigen/eigen/-/archive/3.3.9/eigen-3.3.9.tar.bz2
         sha256: 0fa5cafe78f66d2b501b43016858070d52ba47bd9b1016b0165a7b8e04675677
+    cleanup: 
+      - "*"
     
   - name: lapack
     buildsystem: cmake
@@ -114,8 +123,8 @@ modules:
       - type: archive
         url: https://github.com/swig/swig/archive/v4.0.2.tar.gz
         sha256: b5f43d5f94c57ede694ffe5e805acc5a3a412387d7f97dcf290d06c46335cb0b
-     #cleanup:
-      #- *        
+     cleanup:
+      - /share
         
   - name: gdcm
     builddir: true
@@ -157,6 +166,8 @@ modules:
         url: git://github.com/OpenChemistry/ParaView.git
         tag: v5.9.0
         commit: 0aaf903ba3e8d012a608a466f798a041b4aebe17
+    cleanup: 
+      - /share
         
   - name: ITK
     buildsystem: cmake
